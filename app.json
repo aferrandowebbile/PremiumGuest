@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Experiences Guest App",
+    "slug": "experiences-guest-app",
+    "scheme": "experiences-guest-app",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.spotlio.pocket",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Spotlio Pocket uses camera access to scan purchase QR codes.",
+        "NSMicrophoneUsageDescription": "Spotlio Pocket uses microphone access to record ticket voice notes."
+      }
+    },
+    "android": {
+      "package": "com.spotlio.pocket",
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      "expo-camera",
+      "expo-av"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
