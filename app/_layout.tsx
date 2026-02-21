@@ -3,6 +3,7 @@ import "react-native-gesture-handler";
 import React, { useEffect } from "react";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { LogBox } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -16,11 +17,25 @@ import { ThemeProvider } from "@/theme/ThemeProvider";
 
 void SplashScreen.preventAutoHideAsync();
 
+LogBox.ignoreLogs([
+  "SafeAreaView has been deprecated and will be removed in a future release.",
+  "[expo-av]: Expo AV has been deprecated and will be removed in SDK 54."
+]);
+
+const originalConsoleInfo = console.info.bind(console);
+console.info = (...args: unknown[]) => {
+  const first = args[0];
+  if (typeof first === "string" && first.includes("i18next is maintained with support from Locize")) {
+    return;
+  }
+  originalConsoleInfo(...args);
+};
+
 function AppNavigator() {
   const { config } = useTenant();
 
   return (
-    <ThemeProvider tokenOverrides={config?.theme}>
+    <ThemeProvider tokenOverrides={config?.theme} designOverrides={config?.design?.tokens}>
       <I18nProvider>
         <StatusBar style="auto" />
         <Stack>

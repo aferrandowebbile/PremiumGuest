@@ -1,8 +1,9 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 import { Bell } from "lucide-react-native";
 import { useQuery } from "@tanstack/react-query";
-import { FlashList } from "@shopify/flash-list";
 import { Card, ListRow, SectionHeader } from "@/components";
 import { getNotifications } from "@/config/notifications";
 import { useTenant } from "@/config/TenantProvider";
@@ -11,6 +12,8 @@ import { useTheme } from "@/theme/ThemeProvider";
 export default function InboxScreen() {
   const { theme } = useTheme();
   const { tenantId } = useTenant();
+  const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   const { data } = useQuery({
     queryKey: ["notifications", tenantId],
@@ -18,8 +21,15 @@ export default function InboxScreen() {
   });
 
   return (
-    <View className="flex-1 px-5 pt-5" style={{ backgroundColor: theme.colors.background }}>
-      <SectionHeader title="Inbox" subtitle="Updates and guest-facing alerts" />
+    <View
+      className="flex-1 px-5"
+      style={{
+        backgroundColor: theme.colors.background,
+        paddingTop: insets.top + 8,
+        paddingBottom: insets.bottom + 8
+      }}
+    >
+      <SectionHeader title={t("inbox")} subtitle={t("inboxSubtitle")} />
       {!data?.length ? (
         <Card>
           <View className="items-center py-10">
@@ -27,19 +37,19 @@ export default function InboxScreen() {
               <Bell color={theme.colors.primary} size={26} />
             </View>
             <Text className="font-inter-semibold text-[20px]" style={{ color: theme.colors.text }}>
-              All caught up
+              {t("allCaughtUp")}
             </Text>
             <Text className="mt-2 text-center font-inter text-[14px]" style={{ color: theme.colors.muted }}>
-              No notifications yet. New alerts from Supabase will appear here.
+              {t("noNotificationsDetail")}
             </Text>
           </View>
         </Card>
       ) : (
         <Card>
-          <FlashList
+          <FlatList
             data={data}
-            estimatedItemSize={72}
             keyExtractor={(item) => item.id}
+            contentContainerStyle={{ paddingBottom: insets.bottom + 4 }}
             renderItem={({ item }: { item: any }) => <ListRow title={item.title} subtitle={item.body} />}
           />
         </Card>

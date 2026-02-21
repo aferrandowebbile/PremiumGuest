@@ -269,16 +269,18 @@ function mapOrder(item: unknown): RemoteOrder | null {
     pickStringFromNested(row, [["payment", "currency"], ["totals", "currency"], ["pricing", "currency"], ["price", "currency"]]);
   const status = pickString(row, ["status", "state", "order_status", "orderStatus"]) ?? "unknown";
   const date =
+    pickDateFromRecord(row, ["completed_at", "completedAt"]) ??
+    pickDateFromAttributes(row.attributes, ["completed_at", "completedAt"]) ??
+    pickDateFromNested(row, [
+      ["purchase", "completed_at"],
+      ["purchase", "completedAt"]
+    ]) ??
     pickDateFromRecord(row, [
-      "completed_at",
-      "completedAt",
       "completed_at_day",
       "completedAtDay"
     ]) ??
-    pickDateFromAttributes(row.attributes, ["completed_at", "completedAt", "completed_at_day", "completedAtDay"]) ??
+    pickDateFromAttributes(row.attributes, ["completed_at_day", "completedAtDay"]) ??
     pickDateFromNested(row, [
-      ["purchase", "completed_at"],
-      ["purchase", "completedAt"],
       ["purchase", "completed_at_day"],
       ["purchase", "completedAtDay"]
     ]) ??

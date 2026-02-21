@@ -11,8 +11,7 @@ export type ThemeTokenInput = {
   danger: string;
 };
 
-export type AppTheme = {
-  colors: ThemeTokenInput;
+export type ThemeScaleInput = {
   radius: {
     lg: number;
     xl: number;
@@ -34,7 +33,18 @@ export type AppTheme = {
   };
 };
 
-const baseTheme = {
+export type ThemeOverrides = {
+  colors?: Partial<ThemeTokenInput>;
+  radius?: Partial<ThemeScaleInput["radius"]>;
+  spacing?: Partial<ThemeScaleInput["spacing"]>;
+  typeScale?: Partial<ThemeScaleInput["typeScale"]>;
+};
+
+export type AppTheme = {
+  colors: ThemeTokenInput;
+} & ThemeScaleInput;
+
+const baseTheme: ThemeScaleInput = {
   radius: {
     lg: 16,
     xl: 20,
@@ -82,10 +92,21 @@ export const darkTokens: ThemeTokenInput = {
   danger: "#EF4444"
 };
 
-export const buildTheme = (isDark: boolean, overrides?: Partial<ThemeTokenInput>): AppTheme => ({
-  ...baseTheme,
+export const buildTheme = (isDark: boolean, overrides?: ThemeOverrides): AppTheme => ({
+  radius: {
+    ...baseTheme.radius,
+    ...(overrides?.radius ?? {})
+  },
+  spacing: {
+    ...baseTheme.spacing,
+    ...(overrides?.spacing ?? {})
+  },
+  typeScale: {
+    ...baseTheme.typeScale,
+    ...(overrides?.typeScale ?? {})
+  },
   colors: {
     ...(isDark ? darkTokens : lightTokens),
-    ...(overrides ?? {})
+    ...(overrides?.colors ?? {})
   }
 });

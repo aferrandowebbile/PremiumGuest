@@ -54,3 +54,19 @@ npm run start
 - Unknown CMS section types render safe fallback cards.
 - Runtime module gating uses `enabledModules` in tenant config.
 - Language selector is in Account; Arabic triggers RTL best-effort via `I18nManager`.
+
+## White-label Management Console Contract
+
+All look and feel controls are driven from `tenant_configs.config` in Supabase.
+
+- `theme`: color tokens (brand palette)
+- `design.tokens`: radius, spacing, typography scale
+- `design.homeHeader`: sticky header style (greeting, subtitle, blur, colors)
+- `design.navigationBar`: bottom tab bar branding (background, tint colors, height)
+- `design.widgets`: tenant-level default appearance for each widget (`hero`, `quickActions`, `cardCarousel`, `list`, `infoBanner`, `webEmbed`)
+- `homePage.sections[].props.appearance`: per-widget overrides for that specific section instance
+
+Aspen-inspired layout widget:
+- `aspenDashboard` section type: split status/weather block like the Snowmass reference (`leftValue`, `temperature`, highs/lows, last update, appearance)
+
+This lets you keep one app shell and deliver Aspen-like or other branded experiences per tenant without app rebuilds.
